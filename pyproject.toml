@@ -9,6 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 revChatGPT = "^6.8.2"
+tqdm = "^4.65.0"
 
 
 [build-system]

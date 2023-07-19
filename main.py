@@ -1,54 +1,67 @@
 import sys
+from typing import Tuple
 
 from revChatGPT.V1 import Chatbot, configure
+from tqdm import tqdm
+
+
+def chatgpt_answer_to_prompt_file(
+    chatbot_instance: Chatbot,
+    prompt_file: str,
+    to_be_replaced_word: str,
+    string: str,
+    conversation_id: str | None = None,
+) -> Tuple[str, str]:
+    answer = ""
+    convo_id = conversation_id or ""
+    with open(prompt_file) as f:
+        prompt = f.read().replace(to_be_replaced_word, string)
+        try:
+            for data in chatbot_instance.ask(prompt, conversation_id=conversation_id):
+                answer = data["message"]
+                if not convo_id:
+                    convo_id = data["conversation_id"]
+        except Exception as e:
+            print("Error: ", e, file=sys.stderr)
+        finally:
+            return answer, convo_id
 
 
 def main():
     chatbot = Chatbot(configure())
     problem = input("Explain your problem here\n").strip()
     conversation_id = None
+    iterations = 5
+    total_work_units = 5 + iterations * 3
+    progress_bar = tqdm(
+        total=total_work_units, desc="Processing", ncols=100, ascii=True
+    )
 
     if not problem:
         print("Problem is empty", file=sys.stderr)
         return
 
     # prompt1
-    three_ideas = ""
-    with open("prompts/prompt1") as f:
-        prompt1 = f.read().replace("PROBLEM", problem)
-        try:
-            for data in chatbot.ask(prompt1):
-                three_ideas = data["message"]
-                if conversation_id is None:
-                    conversation_id = data["conversation_id"]
-        except Exception as e:
-            print("Error:", e, file=sys.stderr)
-        finally:
-            print("THREE IDEAS : ", three_ideas)
+    three_ideas, conversation_id = chatgpt_answer_to_prompt_file(
+        chatbot, "prompts/prompt1", "PROBLEM", problem
+    )
+    progress_bar.update(1)
 
-    evaluated_three_ideas = ""
-    with open("prompts/prompt2") as f:
-        prompt2 = f.read().replace("3IDEAS", three_ideas)
-        try:
-            for data in chatbot.ask(prompt2, conversation_id=conversation_id):
-                evaluated_three_ideas = data["message"]
-        except Exception as e:
-            print("Error:", e, file=sys.stderr)
-        finally:
-            print("EVALUATED THREE IDEAS : ", evaluated_three_ideas)
+    evaluated_three_ideas, _ = chatgpt_answer_to_prompt_file(
+        chatbot, "prompts/prompt2", "3IDEAS", three_ideas, conversation_id
+    )
+    progress_bar.update(1)
 
-    winning_idea = ""
-    with open("prompts/prompt3") as f:
-        prompt3 = f.read().replace("WINNINGIDEA", evaluated_three_ideas)
-        try:
-            for data in chatbot.ask(prompt3, conversation_id=conversation_id):
-                winning_idea = data["message"]
-        except Exception as e:
-            print("Error:", e, file=sys.stderr)
-        finally:
-            print("WINNING IDEA : ", winning_idea)
+    winning_idea, _ = chatgpt_answer_to_prompt_file(
+        chatbot,
+        "prompts/prompt3",
+        "WINNINGIDEA",
+        evaluated_three_ideas,
+        conversation_id,
+    )
+    progress_bar.update(1)
 
-    for _ in range(5):
+    for _ in range(iterations):
         new_ideas = ""
         with open("prompts/prompt4") as f:
             prompt4 = (
@@ -60,50 +73,46 @@ def main():
             except Exception as e:
                 print("Error:", e, file=sys.stderr)
             finally:
-                print("NEW IDEAS : ", new_ideas)
+                pass
+                # print("NEW IDEAS : ", new_ideas)
+        progress_bar.update(1)
 
-        evaluated_new_ideas = ""
-        with open("prompts/prompt5") as f:
-            prompt4 = f.read().replace("WLOOP", winning_idea)
-            try:
-                for data in chatbot.ask(prompt4, conversation_id=conversation_id):
-                    evaluated_new_ideas = data["message"]
-            except Exception as e:
-                print("Error:", e, file=sys.stderr)
-            finally:
-                print("EVALUATED NEW IDEAS : ", evaluated_new_ideas)
+        evaluated_new_ideas, _ = chatgpt_answer_to_prompt_file(
+            chatbot,
+            "prompts/prompt5",
+            "WLOOP",
+            new_ideas,
+            conversation_id,
+        )
+        progress_bar.update(1)
 
-        with open("prompts/prompt3") as f:
-            prompt3 = f.read().replace("WINNINGIDEA", evaluated_new_ideas)
-            try:
-                for data in chatbot.ask(prompt3, conversation_id=conversation_id):
-                    winning_idea = data["message"]
-            except Exception as e:
-                print("Error:", e, file=sys.stderr)
-            finally:
-                print("SUB WINNING IDEA : ", winning_idea)
+        winning_idea, _ = chatgpt_answer_to_prompt_file(
+            chatbot,
+            "prompts/prompt3",
+            "WINNINGIDEA",
+            evaluated_new_ideas,
+            conversation_id,
+        )
+        progress_bar.update(1)
 
-    evaluated_winner_idea = ""
-    with open("prompts/prompt6") as f:
-        prompt6 = f.read().replace("WINNER", winning_idea)
-        try:
-            for data in chatbot.ask(prompt6, conversation_id=conversation_id):
-                evaluated_winner_idea = data["message"]
-        except Exception as e:
-            print("Error:", e, file=sys.stderr)
-        finally:
-            print("WINNER IDEA : ", evaluated_winner_idea)
+    evaluated_winner_idea, _ = chatgpt_answer_to_prompt_file(
+        chatbot,
+        "prompts/prompt6",
+        "WINNER",
+        winning_idea,
+        conversation_id,
+    )
+    progress_bar.update(1)
 
-    solution = ""
-    with open("prompts/prompt7") as f:
-        prompt7 = f.read().replace("WINNER2", evaluated_winner_idea)
-        try:
-            for data in chatbot.ask(prompt7, conversation_id=conversation_id):
-                solution = data["message"]
-        except Exception as e:
-            print("Error:", e, file=sys.stderr)
-        finally:
-            print("FINISHED WINNER IDEA : ", solution)
+    solution, _ = chatgpt_answer_to_prompt_file(
+        chatbot, "prompts/prompt7", "WINNER2", evaluated_winner_idea, conversation_id
+    )
+    progress_bar.update(1)
+
+    print(solution)
+
+    # delete the conversation
+    # chatbot.delete_conversation(conversation_id)
 
 
 if __name__ == "__main__":
