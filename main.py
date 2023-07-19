@@ -1,7 +1,9 @@
+import os
 import sys
 from typing import Tuple
 
-from revChatGPT.V1 import Chatbot, configure
+from dotenv import load_dotenv
+from revChatGPT.V1 import Chatbot
 from tqdm import tqdm
 
 
@@ -28,7 +30,13 @@ def chatgpt_answer_to_prompt_file(
 
 
 def main():
-    chatbot = Chatbot(configure())
+    load_dotenv()
+    access_token = os.environ.get("OPENAI_ACCESS_TOKEN")
+    if not access_token:
+        print("Error: OPENAI_ACCESS_TOKEN not set", file=sys.stderr)
+        sys.exit(1)
+
+    chatbot = Chatbot(config={"access_token": access_token})
     problem = input("Explain your problem here\n").strip()
     conversation_id = None
     iterations = 2

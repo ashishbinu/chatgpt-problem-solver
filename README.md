@@ -1,10 +1,9 @@
 # ChatGPT Problem Solver
 
-The ChatGPT Problem Solver is a Python script that uses "Chain Prompting" and the "Tree of Thoughts" principle to solve problems, inspired by this YouTube video: [Link to YouTube Video](https://www.youtube.com/watch?v=j320H2LFx-U). It leverages the RevChatGPT library to get the ChatGPT results.
+The ChatGPT Problem Solver is a Python script that uses "Chain Prompting" and the "Tree of Thoughts" principle to solve problems, inspired by [this](https://www.youtube.com/watch?v=j320H2LFx-U) YouTube video. This script uses leverages the [RevChatGPT](https://github.com/acheong08/ChatGPT) library under the hood to talk to ChatGPT.
 
 ## Prerequisites
 
-- **RevChatGPT**: Make sure to configure RevChatGPT according to the instructions [here](https://github.com/acheong08/ChatGPT#configuration). This script currently supports V1 version of RevChatGPT.
 - **Poetry**: Install Poetry from the [official website](https://python-poetry.org/docs/#installation).
 
 ## Installation
@@ -22,6 +21,14 @@ cd chatgpt-problem-solver
 poetry install
 ```
 
+3. Copy `.env.example` to `.env`.
+
+```bash
+cp .env.example .env
+```
+
+4. Add `OPENAI_ACCESS_TOKEN` value in `.env` file. Get the access token value from [here](https://chat.openai.com/api/auth/session).
+
 ## Usage
 
 Run the script:
@@ -30,11 +37,11 @@ Run the script:
 poetry run python main.py
 ```
 
-Input the problem and get the answer. For more details, refer to the YouTube video mentioned above.
+Input the problem and get the answer.
 
 ## Contributing
 
-Contributions are welcome! If you encounter any issues, have ideas for improvements, or want to add new features, feel free to create issues or submit pull requests following the repository guidelines.
+Contributions are welcome! If you encounter any issues, have ideas for improvements, or want to add new features, feel free to create issues or submit pull requests.
 
 ## License
 
