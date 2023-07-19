@@ -31,7 +31,7 @@ def main():
     chatbot = Chatbot(configure())
     problem = input("Explain your problem here\n").strip()
     conversation_id = None
-    iterations = 5
+    iterations = 2
     total_work_units = 5 + iterations * 3
     progress_bar = tqdm(
         total=total_work_units, desc="Processing", ncols=100, ascii=True
@@ -111,8 +111,7 @@ def main():
 
     print(solution)
 
-    # delete the conversation
-    # chatbot.delete_conversation(conversation_id)
+    chatbot.delete_conversation(conversation_id)
 
 
 if __name__ == "__main__":
