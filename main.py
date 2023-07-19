@@ -19,7 +19,9 @@ def chatgpt_answer_to_prompt_file(
     with open(prompt_file) as f:
         prompt = f.read().replace(to_be_replaced_word, string)
         try:
-            for data in chatbot_instance.ask(prompt, conversation_id=conversation_id):
+            for data in chatbot_instance.ask(
+                prompt, conversation_id=conversation_id, auto_continue=True
+            ):
                 answer = data["message"]
                 if not convo_id:
                     convo_id = data["conversation_id"]
@@ -76,7 +78,9 @@ def main():
                 f.read().replace("WINNING2", winning_idea).replace("PROBLEM", problem)
             )
             try:
-                for data in chatbot.ask(prompt4, conversation_id=conversation_id):
+                for data in chatbot.ask(
+                    prompt4, conversation_id=conversation_id, auto_continue=True
+                ):
                     new_ideas = data["message"]
             except Exception as e:
                 print("Error:", e, file=sys.stderr)
@@ -117,6 +121,7 @@ def main():
     )
     progress_bar.update(1)
 
+    print()
     print(solution)
 
     chatbot.delete_conversation(conversation_id)
