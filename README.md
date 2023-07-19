@@ -1,6 +1,6 @@
 # ChatGPT Problem Solver
 
-The ChatGPT Problem Solver is a Python script that uses "Chain Prompting" and the "Tree of Thoughts" principle to solve problems, inspired by [this](https://www.youtube.com/watch?v=j320H2LFx-U) YouTube video. This script uses leverages the [RevChatGPT](https://github.com/acheong08/ChatGPT) library under the hood to talk to ChatGPT.
+The ChatGPT Problem Solver is a Python script that uses "Chain Prompting" and the "Tree of Thoughts" principle to solve problems, inspired by [this](https://www.youtube.com/watch?v=j320H2LFx-U) YouTube video. The script leverages the [RevChatGPT](https://github.com/acheong08/ChatGPT) library under the hood to talk to ChatGPT.
 
 ## Prerequisites
 
@@ -27,17 +27,39 @@ poetry install
 cp .env.example .env
 ```
 
-4. Add `OPENAI_ACCESS_TOKEN` value in `.env` file. Get the access token value from [here](https://chat.openai.com/api/auth/session).
+4. Add your `OPENAI_ACCESS_TOKEN` value in the `.env` file. Obtain the access token value from [here](https://chat.openai.com/api/auth/session).
 
 ## Usage
 
-Run the script:
+### Running the Script
+
+To run the script, use the following command:
 
 ```bash
 poetry run python main.py
 ```
 
-Input the problem and get the answer.
+### Input the Problem
+
+Once the script is running, input the problem you want to solve using ChatGPT.
+
+## Docker Installation
+
+Alternatively, you can use Docker to run the ChatGPT Problem Solver:
+
+1. Build the Docker image:
+
+```bash
+docker build -t chatgpt-problem-solver .
+```
+
+2. Add your `OPENAI_ACCESS_TOKEN` value in the `.env` file.
+
+3. Run the Docker container:
+
+```bash
+docker run -it --rm --env-file .env chatgpt-problem-solver
+```
 
 ## Contributing
 
