@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "chatgpt-problem-solver"
+version = "0.1.0"
+description = "Chatgpt script using interative chaining and tree of thoughts principle for problem solving."
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+revChatGPT = "^6.8.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
