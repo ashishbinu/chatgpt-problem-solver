@@ -39,17 +39,16 @@ def main():
         sys.exit(1)
 
     chatbot = Chatbot(config={"access_token": access_token})
-    problem = input("Explain your problem here\n").strip()
+    problem = ""
+    print("Explain your problem here\n")
+    while problem == "":
+        problem = input().strip()
     conversation_id = None
     iterations = 2
     total_work_units = 5 + iterations * 3
     progress_bar = tqdm(
         total=total_work_units, desc="Processing", ncols=100, ascii=True
     )
-
-    if not problem:
-        print("Problem is empty", file=sys.stderr)
-        return
 
     # prompt1
     three_ideas, conversation_id = chatgpt_answer_to_prompt_file(
