@@ -2,6 +2,9 @@
 
 The ChatGPT Problem Solver is a Python script that uses "Chain Prompting" and the "Tree of Thoughts" principle to solve problems, inspired by [this](https://www.youtube.com/watch?v=j320H2LFx-U) YouTube video. The script leverages the [RevChatGPT](https://github.com/acheong08/ChatGPT) library under the hood to talk to ChatGPT.
 
+> [!WARNING]
+> As of now this doesn't work, the prompts need serious work to make it work.
+
 ## Prerequisites
 
 - **Poetry**: Install Poetry from the [official website](https://python-poetry.org/docs/#installation).
